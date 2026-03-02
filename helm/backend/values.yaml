@@ -1,0 +1,41 @@
+replicaCount: 1
+
+image:
+  repository: 851725642392.dkr.ecr.us-east-1.amazonaws.com/task-platform-backend
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 5000
+
+serviceAccount:
+  name: backend-sa
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::851725642392:role/task-platform-backend-sa-role"
+
+env:
+  PORT: "5000"
+  DB_HOST: "task-platform-dev.cpg66q0e0d3k.us-east-1.rds.amazonaws.com"
+  DB_PORT: "5432"
+  DB_NAME: "taskplatform"
+  DB_SSL: "true"
+
+secretArn: "arn:aws:secretsmanager:us-east-1:851725642392:secret:task-platform/dev/db-credentials-MNELjp"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 768Mi
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 5
+  cpuUtilization: 70
+
+ingress:
+  enabled: true
+  host: ""   # leave empty — use ALB DNS directly for now

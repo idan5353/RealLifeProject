@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: 851725642392.dkr.ecr.us-east-1.amazonaws.com/task-platform-frontend
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

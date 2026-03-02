@@ -16,6 +16,16 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 const PORT = process.env.PORT || 5000;
 
-initDB().then(() => {
-  app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
+// ✅ Start server first — health probe works immediately
+app.listen(PORT, () => {
+  console.log(`🚀 API running on port ${PORT}`);
+
+  // Init DB after server is already listening
+  initDB()
+    .then(() => console.log('✅ Database ready'))
+    .catch(err => {
+      console.error('❌ DB init failed:', err.message);
+      // Don't crash — server stays up, liveness probe stays green
+      // DB errors will surface per-request
+    });
 });
