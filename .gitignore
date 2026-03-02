@@ -1,0 +1,17 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+envs/*.tfvars   
+
+# App
+node_modules/
+.env
+backend/.env
+frontend/.env
+
+# OS
+.DS_Store
+Thumbs.db
