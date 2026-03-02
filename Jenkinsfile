@@ -117,15 +117,16 @@ pipeline {
     }
 
     post {
-        success {
-            echo '✅ Pipeline succeeded — app deployed to dev'
-        }
-        failure {
-            echo '❌ Pipeline failed — check logs above'
-        }
-        always {
-            // Clean up local docker images to save disk space
-            sh 'docker image prune -f'
-        }
+    success {
+        echo '✅ Pipeline succeeded — app deployed to dev'
+    }
+    failure {
+        echo '❌ Pipeline failed — check logs above'
+    }
+    always {
+        sh 'docker image prune -f || true'
     }
 }
+
+}
+
