@@ -95,26 +95,23 @@ pipeline {
 }
 
 
-        stage('Deploy to EKS') {
-            steps {
-                withCredentials([
-                    [
-                        $class: 'AmazonWebServicesCredentialsBinding',
-                        credentialsId: 'aws-credentials',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    ]
-                ]) {
-                    sh """
-                        aws eks update-kubeconfig \
-                          --region ${AWS_REGION} \
-                          --name ${CLUSTER_NAME}
+        stage('Update Helm Image Tag') {
+    steps {
+        sh """
+            sed -i 's/tag: .*/tag: ${IMAGE_TAG}/' helm/backend/values.yaml
+            sed -i 's/tag: .*/tag: ${IMAGE_TAG}/' helm/frontend/values.yaml
+        """
+        sh """
+            git config user.email "jenkins@task-platform.io"
+            git config user.name "Jenkins"
+            git checkout develop
+            git add helm/backend/values.yaml helm/frontend/values.yaml
+            git commit -m "ci: update image tag to ${IMAGE_TAG} [skip ci]"
+            git push https://idan5353@github.com/idan5353/RealLifeProject.git develop
+        """
+    }
+}
 
-                        helm upgrade backend ./helm/backend --namespace dev
-                        helm upgrade frontend ./helm/frontend --namespace dev
-                    """
-                }
-            }
         }
     }
 

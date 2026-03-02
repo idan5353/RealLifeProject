@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: task-platform-backend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/idan5353/RealLifeProject
+    targetRevision: develop
+    path: helm/backend
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true        # delete resources removed from Helm chart
+      selfHeal: true     # revert manual kubectl changes automatically
+    syncOptions:
+      - CreateNamespace=true
