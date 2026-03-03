@@ -121,7 +121,7 @@ Push to ECR
 Update values.yaml with new image tag
 
 Push to GitHub → ArgoCD auto-syncs within 3 minutes
----
+```bash
 📊 Observability
 Grafana Dashboards
 Access Grafana via port-forward:
