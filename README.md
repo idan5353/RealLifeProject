@@ -194,14 +194,14 @@ Default credentials:
 
 # 🗺️ Project Roadmap
 
-- ✅ Phase 1 — App containerization (Docker Compose)
-- ✅ Phase 2 — AWS infrastructure (Terraform)
-- ✅ Phase 3 — EKS deployment (Helm)
-- ✅ Phase 4 — CI/CD pipeline (Jenkins + ArgoCD)
-- ✅ Phase 5 — Observability (Prometheus + Grafana + Alertmanager)
-- ⏳ Phase 6 — Centralized logging (ELK / EFK stack)
-- ⏳ Phase 7 — HTTPS + Custom Domain (ACM + Route53)
-- ⏳ Phase 8 — Security hardening (Network Policies, RBAC)
+✅ Phase 1 — Git structure
+✅ Phase 2 — Terraform
+✅ Phase 3 — Production Dockerfiles + ECR
+✅ Phase 4 — Helm charts live on EKS
+✅ Phase 5 — Jenkins CI pipeline
+✅ Phase 6 — ArgoCD GitOps
+✅ Phase 7 — Monitoring
+
 
 ---
 
