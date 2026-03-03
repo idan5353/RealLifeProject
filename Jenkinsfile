@@ -107,7 +107,7 @@ pipeline {
             git checkout develop
             git add helm/backend/values.yaml helm/frontend/values.yaml
             git commit -m "ci: update image tag to ${IMAGE_TAG} [skip ci]"
-            git push https://idan5353@github.com/idan5353/RealLifeProject.git develop
+            git push https://github.com/idan5353/task-platform-devops.git develop
         """
     }
 }
