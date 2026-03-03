@@ -124,72 +124,89 @@ Push to GitHub → ArgoCD auto-syncs within 3 minutes
 
 ```
 
-📊 Observability
-Grafana Dashboards
+# 🚀 Task Platform — DevOps Project
+
+---
+
+# 📊 Observability
+
+## Grafana Dashboards
+
 Access Grafana via port-forward:
 
-bash
+```bash
 kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n monitoring
-Open http://localhost:3000 (default: admin / prom-operator)
+```
 
-Available dashboards:
+Open in your browser:
 
-Kubernetes Cluster Overview
+http://localhost:3000
 
-Node Exporter (CPU, memory, disk)
+Default credentials:
+- Username: admin
+- Password: prom-operator
 
-Pod Metrics
+### Available Dashboards
 
-Task Platform — custom app dashboard
+- Kubernetes Cluster Overview
+- Node Exporter (CPU, memory, disk)
+- Pod Metrics
+- Task Platform — Custom Application Dashboard
 
-Alertmanager Slack Alerts
-Configured alerts:
+---
 
-🔴 Pod CrashLooping
+## 🚨 Alertmanager Slack Alerts
 
-🟡 High CPU / Memory usage
+### Configured Alerts
 
-🔴 Backend service down
+- 🔴 Pod CrashLooping
+- 🟡 High CPU / Memory usage
+- 🔴 Backend service down
+- 🟡 HPA at maximum replicas
 
-🟡 HPA at maximum replicas
+---
 
-💰 Infrastructure Cost
-Resource	Monthly Cost
-EKS Control Plane	$7.20
-2x t3.medium (Spot)	~$12
-RDS db.t3.micro	~$13
-ALB	~$5
-ECR + S3 + Secrets Manager	~$1
-Total	~$38/month
-💡 Spot instances save ~60% vs on-demand. No NAT Gateways used — saving ~$32/month vs standard VPC design.
+# 💰 Infrastructure Cost
 
-🔐 Security Highlights
-IRSA — backend pods access AWS services via IAM role, never static credentials
+| Resource | Monthly Cost |
+|----------|-------------|
+| EKS Control Plane | $7.20 |
+| 2x t3.medium (Spot) | ~$12 |
+| RDS db.t3.micro | ~$13 |
+| ALB | ~$5 |
+| ECR + S3 + Secrets Manager | ~$1 |
+| **Total** | **~$38/month** |
 
-Secrets Manager — RDS password auto-generated, never in code or environment variables
+### 💡 Cost Optimization Notes
 
-ECR lifecycle policies — old images auto-deleted, no credential sprawl
+- Spot instances save ~60% vs On-Demand
+- No NAT Gateways used — saving ~$32/month vs standard VPC design
 
-S3 public access blocked — assets bucket not publicly accessible
+---
 
-RDS encryption at rest — enabled by default
+# 🔐 Security Highlights
 
-🗺️ Roadmap
- Phase 1 — App containerization (Docker Compose)
+- IRSA — Backend pods access AWS services via IAM role (no static credentials)
+- AWS Secrets Manager — RDS password auto-generated, never stored in code or environment variables
+- ECR Lifecycle Policies — Old images auto-deleted automatically
+- S3 Public Access Blocked — Assets bucket not publicly accessible
+- RDS Encryption at Rest — Enabled by default
 
- Phase 2 — AWS infrastructure (Terraform)
+---
 
- Phase 3 — EKS deployment (Helm)
+# 🗺️ Project Roadmap
 
- Phase 4 — CI/CD pipeline (Jenkins + ArgoCD)
+- ✅ Phase 1 — App containerization (Docker Compose)
+- ✅ Phase 2 — AWS infrastructure (Terraform)
+- ✅ Phase 3 — EKS deployment (Helm)
+- ✅ Phase 4 — CI/CD pipeline (Jenkins + ArgoCD)
+- ✅ Phase 5 — Observability (Prometheus + Grafana + Alertmanager)
+- ⏳ Phase 6 — Centralized logging (ELK / EFK stack)
+- ⏳ Phase 7 — HTTPS + Custom Domain (ACM + Route53)
+- ⏳ Phase 8 — Security hardening (Network Policies, RBAC)
 
- Phase 5 — Observability (Prometheus + Grafana + Alertmanager)
+---
 
- Phase 6 — Centralized logging (ELK/EFK stack)
+# 👤 Author
 
- Phase 7 — HTTPS + custom domain (ACM + Route53)
-
- Phase 8 — Security hardening (Network Policies, RBAC)
-
-👤 Author
 Idan Uziel
