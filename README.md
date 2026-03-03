@@ -124,9 +124,7 @@ Push to GitHub → ArgoCD auto-syncs within 3 minutes
 
 ```
 
-# 🚀 Task Platform — DevOps Project
 
----
 
 # 📊 Observability
 
