@@ -194,13 +194,13 @@ Default credentials:
 
 # 🗺️ Project Roadmap
 
-✅ Phase 1 — Git structure
-✅ Phase 2 — Terraform
-✅ Phase 3 — Production Dockerfiles + ECR
-✅ Phase 4 — Helm charts live on EKS
-✅ Phase 5 — Jenkins CI pipeline
-✅ Phase 6 — ArgoCD GitOps
-✅ Phase 7 — Monitoring
+-✅ Phase 1 — Git structure
+-✅ Phase 2 — Terraform
+-✅ Phase 3 — Production Dockerfiles + ECR
+-✅ Phase 4 — Helm charts live on EKS
+-✅ Phase 5 — Jenkins CI pipeline
+-✅ Phase 6 — ArgoCD GitOps
+-✅ Phase 7 — Monitoring
 
 
 ---
