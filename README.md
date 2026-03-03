@@ -1,0 +1,193 @@
+# 🚀 Task Platform — Full-Stack DevOps Project on AWS
+
+A production-grade task management SaaS application built to demonstrate end-to-end DevOps practices on AWS — from infrastructure provisioning to GitOps deployment, observability, and cost optimization.
+
+![diagram](https://github.com/user-attachments/assets/ea51ee48-a29e-4452-8e49-ac03aa1fca94)
+
+
+---
+
+## 📐 Architecture Overview
+
+Developer (git push)
+↓
+GitHub (develop branch)
+↓ webhook
+Jenkins (CI — lint → test → build → ECR push → update Helm values)
+↓ git push values.yaml
+GitHub (updated image tag)
+↓ ArgoCD polls every 3 min
+ArgoCD (GitOps CD — helm upgrade)
+↓
+EKS Cluster (dev namespace)
+├── Backend — Node.js/Express → RDS PostgreSQL
+├── Frontend — React/Vite → Nginx
+└── ALB → internet traffic
+
+text
+Prometheus → scrapes metrics every 15s
+Grafana    → dashboards + Alertmanager → Slack alerts
+text
+
+![apppic](https://github.com/user-attachments/assets/3745b22a-83b2-48ca-b2fc-dbb03fe09f27)
+
+---
+
+## 🛠️ Tech Stack
+
+### Application
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, Nginx |
+| Backend | Node.js, Express, JWT Auth |
+| Database | PostgreSQL 16 (AWS RDS) |
+
+### Infrastructure (IaC)
+| Tool | Purpose |
+|---|---|
+| Terraform | All AWS resources — VPC, EKS, RDS, ECR, S3, IAM |
+| AWS EKS | Managed Kubernetes (v1.29, Spot instances) |
+| AWS RDS | Managed PostgreSQL with encryption + Secrets Manager |
+| AWS ECR | Private container registries |
+| AWS ALB | Internet-facing ingress via AWS Load Balancer Controller |
+| AWS Secrets Manager | Secure credential storage with IRSA access |
+| S3 + DynamoDB | Terraform remote state + locking |
+
+### Kubernetes & Deployment
+| Tool | Purpose |
+|---|---|
+| Helm | Kubernetes package manager (custom charts) |
+| ArgoCD | GitOps continuous delivery |
+| HPA | Horizontal Pod Autoscaler (2–5 replicas) |
+| IRSA | IAM Roles for Service Accounts (least-privilege) |
+
+### CI/CD
+| Tool | Purpose |
+|---|---|
+| Jenkins | CI pipeline — lint, test, Docker build, ECR push |
+| GitHub | Source of truth + ArgoCD sync target |
+| Docker | Multi-stage production images |
+
+### Observability
+| Tool | Purpose |
+|---|---|
+| Prometheus | Metrics collection (cluster + app) |
+| Grafana | Dashboards — Kubernetes, Nodes, App metrics |
+| Alertmanager | Slack alerts — pod crashes, high CPU, HPA saturation |
+| prom-client | Custom Node.js metrics (`/metrics` endpoint) |
+
+
+## 🚀 How to Deploy
+
+### Prerequisites
+- AWS CLI configured
+- Terraform >= 1.6
+- kubectl + helm installed
+- Docker running
+
+### 1. Provision Infrastructure
+```bash
+cd terraform/
+terraform init
+terraform apply
+2. Configure kubectl
+bash
+aws eks update-kubeconfig --region us-east-1 --name task-platform-cluster
+3. Install Cluster Add-ons
+bash
+# AWS Load Balancer Controller
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system --set clusterName=task-platform-cluster
+
+# ArgoCD
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+4. Deploy Applications
+bash
+# Backend
+helm upgrade --install backend ./helm/backend -n dev --create-namespace
+
+# Frontend
+helm upgrade --install frontend ./helm/frontend -n dev
+5. CI/CD — Jenkins Pipeline
+Jenkins is configured with a webhook on the develop branch. On every push:
+
+Lint & test
+
+Build Docker images
+
+Push to ECR
+
+Update values.yaml with new image tag
+
+Push to GitHub → ArgoCD auto-syncs within 3 minutes
+
+📊 Observability
+Grafana Dashboards
+Access Grafana via port-forward:
+
+bash
+kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n monitoring
+Open http://localhost:3000 (default: admin / prom-operator)
+
+Available dashboards:
+
+Kubernetes Cluster Overview
+
+Node Exporter (CPU, memory, disk)
+
+Pod Metrics
+
+Task Platform — custom app dashboard
+
+Alertmanager Slack Alerts
+Configured alerts:
+
+🔴 Pod CrashLooping
+
+🟡 High CPU / Memory usage
+
+🔴 Backend service down
+
+🟡 HPA at maximum replicas
+
+💰 Infrastructure Cost
+Resource	Monthly Cost
+EKS Control Plane	$7.20
+2x t3.medium (Spot)	~$12
+RDS db.t3.micro	~$13
+ALB	~$5
+ECR + S3 + Secrets Manager	~$1
+Total	~$38/month
+💡 Spot instances save ~60% vs on-demand. No NAT Gateways used — saving ~$32/month vs standard VPC design.
+
+🔐 Security Highlights
+IRSA — backend pods access AWS services via IAM role, never static credentials
+
+Secrets Manager — RDS password auto-generated, never in code or environment variables
+
+ECR lifecycle policies — old images auto-deleted, no credential sprawl
+
+S3 public access blocked — assets bucket not publicly accessible
+
+RDS encryption at rest — enabled by default
+
+🗺️ Roadmap
+ Phase 1 — App containerization (Docker Compose)
+
+ Phase 2 — AWS infrastructure (Terraform)
+
+ Phase 3 — EKS deployment (Helm)
+
+ Phase 4 — CI/CD pipeline (Jenkins + ArgoCD)
+
+ Phase 5 — Observability (Prometheus + Grafana + Alertmanager)
+
+ Phase 6 — Centralized logging (ELK/EFK stack)
+
+ Phase 7 — HTTPS + custom domain (ACM + Route53)
+
+ Phase 8 — Security hardening (Network Policies, RBAC)
+
+👤 Author
+Idan Uziel
